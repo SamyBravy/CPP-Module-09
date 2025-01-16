@@ -6,7 +6,7 @@
 /*   By: samuele <samuele@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 23:50:14 by samuele           #+#    #+#             */
-/*   Updated: 2025/01/16 00:46:01 by samuele          ###   ########.fr       */
+/*   Updated: 2025/01/16 10:07:57 by samuele          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,36 +21,41 @@
 #include <ctime>
 #include <algorithm>
 
-template <typename T>
-class PmergeMe
-{
-    private:
-        T _numbers;
-    
-    public:
-        PmergeMe() { }
-        PmergeMe(T numbers) : _numbers(numbers) { }
-        PmergeMe(const PmergeMe &src) { *this = src; }
-        ~PmergeMe() { }
-        PmergeMe &operator=(const PmergeMe &src)
-        {
-            if (this != &src)
-                _numbers = src.getNumbers();
-            return *this;
-        }
-
-        T getNumbers() const { return _numbers; }
-        void setNumbers(T numbers) { _numbers = numbers; }
-
-        void sort();
-};
-
-int jacobsthal(int i);
+int jacobsthal(int i, bool reset = false);
+int &getFirst(int &elem);
 
 template <typename T>
-void PmergeMe<T>::sort()
+int &getFirst(std::pair<T, T> &elem)
 {
-    
+    return getFirst(elem.first);
+}
+
+template <typename T>
+void mergeInsertion(std::vector<T> &sequence)
+{
+    if (sequence.size() < 2)
+        return;
+    if (sequence.size() == 2)
+    {
+        if (getFirst(sequence[0]) > getFirst(sequence[1]))
+            std::swap(getFirst(sequence[0]), getFirst(sequence[1]));
+        return;
+    }
+
+    std::vector<std::pair<T, T> > pairs;
+    for (size_t i = 0; i < sequence.size() - (sequence.size() % 2); i += 2)
+    {
+        pairs.push_back(std::make_pair(sequence[i], sequence[i + 1]));
+        if (getFirst(pairs.back().first) < getFirst(pairs.back().second))
+            std::swap(getFirst(pairs.back().first), getFirst(pairs.back().second));
+    }
+    mergeInsertion<std::vector<std::pair<T, T> > >(pairs);
+}
+
+template <typename T>
+void mergeInsertion(std::list<T> &sequence)
+{
+    (void)sequence;
 }
 
 #endif
