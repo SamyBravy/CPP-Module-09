@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sdell-er <sdell-er@student.42.fr>          +#+  +:+       +#+        */
+/*   By: samuele <samuele@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 14:41:05 by samuele           #+#    #+#             */
-/*   Updated: 2025/01/17 19:02:28 by sdell-er         ###   ########.fr       */
+/*   Updated: 2025/01/17 22:08:02 by samuele          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,18 @@ int getIndex(int i, int recursion)
 	return i * pow(2, recursion);
 }
 
+void swapPairs(std::vector<int> &sequence, int i1, int i2)
+{
+	for (int i = 0; i < i2 - i1; i++)
+		std::swap(sequence[i1 + i], sequence[i2 + i]);
+}
+
+void insertPairs(std::vector<int> &sequence1, std::vector<int> &sequence2, int i1, int i2, int recursion)
+{
+    for (size_t i = 0; i < pow(2, recursion); i++)
+        sequence1.insert(sequence1.begin() + i1 + i, sequence2[i2 + i]);
+}
+
 int binaryInsertionIndex(const std::vector<int> &sequence, int value, int recursion)
 {
     int l = 0;
@@ -53,6 +65,12 @@ int binaryInsertionIndex(const std::vector<int> &sequence, int value, int recurs
             r = mid;
     }
     return getIndex(l, recursion);
+}
+
+void erasePairs(std::vector<int> &sequence, int i, int recursion)
+{
+    for (size_t j = 0; j < pow(2, recursion); j++)
+        sequence.erase(sequence.begin() + i);
 }
 
 void mergeInsertion(std::vector<int> &sequence, int recursion)
@@ -112,14 +130,40 @@ void mergeInsertion(std::vector<int> &sequence, int recursion)
         insertPairs(sequence, struggler, binaryInsertionIndex(sequence, struggler[0], recursion), 0, recursion);
 }
 
-int getIndexValue(const std::list<int> &sequence, int index)
+int &getIndexValue(std::list<int>& sequence, int index)
 {
-	std::list<int>::const_iterator it = sequence.begin();
-	std::advance(it, index);
-	return *it;
+    std::list<int>::iterator it = sequence.begin();
+    std::advance(it, index);
+    return *it;
 }
 
-int binaryInsertionIndex(const std::list<int> &sequence, int value, int recursion)
+void swapPairs(std::list<int> &sequence, int i1, int i2)
+{
+	for (int i = 0; i < i2 - i1; i++)
+		std::swap(getIndexValue(sequence, i1 + i), getIndexValue(sequence, i2 + i));
+}
+
+void insertPairs(std::list<int> &sequence1, std::list<int> &sequence2, int i1, int i2, int recursion)
+{
+    for (size_t i = 0; i < pow(2, recursion); i++)
+    {
+        std::list<int>::iterator it = sequence1.begin();
+        std::advance(it, i1 + i);
+        sequence1.insert(it, getIndexValue(sequence2, i2 + i));
+    }
+}
+
+void erasePairs(std::list<int> &sequence, int i, int recursion)
+{
+    for (size_t j = 0; j < pow(2, recursion); j++)
+    {
+        std::list<int>::iterator it = sequence.begin();
+        std::advance(it, i);
+        sequence.erase(it);
+    }
+}
+
+int binaryInsertionIndex(std::list<int> &sequence, int value, int recursion)
 {
     int l = 0;
     int r = getSize(sequence, recursion);
@@ -147,7 +191,7 @@ void mergeInsertion(std::list<int> &sequence, int recursion)
 		return;
 	}
 
-    std::vector<int> struggler;
+    std::list<int> struggler;
     if (getSize(sequence, recursion) % 2)
     {
         insertPairs(struggler, sequence, 0, getIndex(getSize(sequence, recursion) - 1, recursion), recursion);
@@ -156,20 +200,20 @@ void mergeInsertion(std::list<int> &sequence, int recursion)
 	
 	for (size_t i = 0; i < getSize(sequence, recursion); i += 2)
 	{
-		if (sequence[getIndex(i, recursion)] < sequence[getIndex(i + 1, recursion)])
+		if (getIndexValue(sequence, getIndex(i, recursion)) < getIndexValue(sequence, getIndex(i + 1, recursion)))
 			swapPairs(sequence, getIndex(i, recursion), getIndex(i + 1, recursion));
 	}
 	
 	if (getSize(sequence, recursion) == 2)
 	{
-		if (sequence[0] > sequence[getIndex(1, recursion)])
+		if (getIndexValue(sequence, 0) > getIndexValue(sequence, getIndex(1, recursion)))
 			swapPairs(sequence, 0, getIndex(1, recursion));
-        insertPairs(sequence, struggler, binaryInsertionIndex(sequence, struggler[0], recursion), 0, recursion);
+        insertPairs(sequence, struggler, binaryInsertionIndex(sequence, getIndexValue(struggler, 0), recursion), 0, recursion);
 		return ;
 	}
 	mergeInsertion(sequence, recursion + 1);
 
-	std::vector<int> lowers;
+	std::list<int> lowers;
 	for (size_t i = 0; i < getSize(sequence, recursion); i += 2)
         insertPairs(lowers, sequence, lowers.size(), getIndex(i + 1, recursion), recursion);
     for (size_t i = 0; i < getSize(sequence, recursion); i++)
@@ -183,12 +227,12 @@ void mergeInsertion(std::list<int> &sequence, int recursion)
         {
             if (j >= getSize(lowers, recursion))
                 continue;
-			insertPairs(sequence, lowers, binaryInsertionIndex(sequence, lowers[getIndex(j, recursion)], recursion), getIndex(j, recursion), recursion);
+			insertPairs(sequence, lowers, binaryInsertionIndex(sequence, getIndexValue(lowers, getIndex(j, recursion)), recursion), getIndex(j, recursion), recursion);
             i++;
         }
         jacob++;
     }
 
     if (!struggler.empty())
-        insertPairs(sequence, struggler, binaryInsertionIndex(sequence, struggler[0], recursion), 0, recursion);
+        insertPairs(sequence, struggler, binaryInsertionIndex(sequence, getIndexValue(struggler, 0), recursion), 0, recursion);
 }
