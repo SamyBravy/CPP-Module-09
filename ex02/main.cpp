@@ -6,7 +6,7 @@
 /*   By: samuele <samuele@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 23:51:04 by samuele           #+#    #+#             */
-/*   Updated: 2025/01/17 22:15:52 by samuele          ###   ########.fr       */
+/*   Updated: 2025/01/17 22:45:56 by samuele          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
         std::cout << numbers_v[i] << " ";
     std::cout << std::endl;
     std::cout << std::fixed << "Time to process a range of " << numbers_v.size() << " elements with std::vector: " << duration_v << "s" << std::endl;
-    std::cout << std::fixed << "Time to process a range of " << numbers_l.size() << " elements with std::list: " << duration_l << "s" << std::endl;
+    std::cout << std::fixed << "Time to process a range of " << numbers_l.size() << " elements with std::list:   " << duration_l << "s" << std::endl;
     
     return 0;
 }
