@@ -12,7 +12,7 @@
 
 # https://mathworld.wolfram.com/JacobsthalNumber.html
 # https://github.com/nerraou/Ford-Johnson-algorithm?tab=readme-ov-file
-# ./PmergeMe $(seq 1 3500 | awk '{printf "%d ", int(rand()*10001)}')
+# ./PmergeMe `shuf -i 1-100000 -n 3000 | tr "\n" " "`
 
 NAME = PmergeMe
 SRC = main.cpp \
