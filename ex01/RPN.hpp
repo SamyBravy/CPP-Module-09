@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samuele <samuele@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sdell-er <sdell-er@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 15:05:11 by samuele           #+#    #+#             */
-/*   Updated: 2024/12/29 15:22:56 by samuele          ###   ########.fr       */
+/*   Updated: 2025/01/18 18:32:07 by sdell-er         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class RPN
 {
     private:
-        std::stack<int> _stack;
+        std::stack<double> _stack;
     
     public:
         RPN();

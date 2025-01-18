@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: samuele <samuele@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sdell-er <sdell-er@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/29 15:10:06 by samuele           #+#    #+#             */
-/*   Updated: 2024/12/29 15:25:38 by samuele          ###   ########.fr       */
+/*   Updated: 2025/01/18 18:32:37 by sdell-er         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void RPN::calculate(const std::string &str)
             if (_stack.size() < 2)
                 throw std::invalid_argument("Error: invalid number of operands");
             
-            int b = _stack.top();
+            double b = _stack.top();
             _stack.pop();
-            int a = _stack.top();
+            double a = _stack.top();
             _stack.pop();
             
             switch (*it)
@@ -59,6 +59,8 @@ void RPN::calculate(const std::string &str)
                     _stack.push(a * b);
                     break;
                 case '/':
+					if (b == 0)
+						throw std::invalid_argument("Error: division by zero");
                     _stack.push(a / b);
                     break;
                 default:
